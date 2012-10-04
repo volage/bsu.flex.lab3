@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				autoDrawBackground="true">
+	<fx:Script>
+		<![CDATA[
+			import by.gramovich.bsu.flex.lab3.controller.DragAndDropController;
+			
+			import by.gramovich.bsu.flex.lab3.model.DragAndDropModel;
+			import by.gramovich.bsu.flex.lab3.model.ListController;
+			import by.gramovich.bsu.flex.lab3.model.ListModel;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.ItemClickEvent;
+			
+			[Bindable]
+			private var dataGridModel: DragAndDropModel = DragAndDropModel.getInstance();
+			
+			[Bindable]
+			private var listModel: ListModel = ListModel.getInstance();
+			
+			[Bindable]
+			private var controller: DragAndDropController = new DragAndDropController();
+			
+			[Bindable]
+			private var listController: ListController = new ListController();
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:RadioButtonGroup id="radioButtonGroup" itemClick="{listController.radioButtonGroup_itemClickHandler(event)}"/>
+	</fx:Declarations>
+	<s:HGroup>
+		<s:CheckBox content="{data}" selected="{data.Checked}" click="{listController.checkButtonGroup_itemClickHandler(event)}"/>
+		<fx:Script>
+			<![CDATA[
+				override public function set data( value:Object ) : void 
+				{
+					super.data = value;
+					rb.group = radioButtonGroup;
+				}
+				
+			]]>
+		</fx:Script>
+		<s:RadioButton groupName="radioButtonGroup" id="rb" selected="{data.Sorted}" value="{data}" />
+		<s:Image height="20"/>
+		<s:Label text="{data.Title}">
+			
+		</s:Label>
+	</s:HGroup>
+	
+</s:ItemRenderer>

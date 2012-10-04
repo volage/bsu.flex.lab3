@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   xmlns:controls="mx.controls.*"
+			   minWidth="955" minHeight="600">
+	<fx:Script>
+		<![CDATA[
+			import by.gramovich.bsu.flex.lab3.controller.DragAndDropController;
+			
+			import by.gramovich.bsu.flex.lab3.model.DragAndDropModel;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.ItemClickEvent;
+			
+			[Bindable]
+			public var controller: DragAndDropController = new DragAndDropController();
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:RadioButtonGroup id="radioButtonGroup" itemClick="{controller.onRadioButtoClick(event)}" />
+	</fx:Declarations>
+	<s:HGroup width="100%" height="100%">
+		<s:List id="list" height="100%" width="20%" dataProvider="{controller.model.dataList}" >
+			<s:itemRenderer>
+			<fx:Component>
+			<s:ItemRenderer>
+				<s:HGroup>
+					<s:CheckBox automationName="{data.Index}" selected="{data.Checked}" click="{outerDocument.controller.onCheckButtonClick(event)}"/>
+					<fx:Script>
+						<![CDATA[
+							override public function set data( value:Object ) : void 
+							{
+								super.data = value;
+								rb.group = outerDocument.radioButtonGroup;
+							}
+							
+						]]>
+					</fx:Script>
+					<s:RadioButton groupName="radioButtonGroup" id="rb" selected="{data.Sorted}" value="{data}" />
+					<s:Image id="img" width="20" height="20" source="{data.src}" click="{outerDocument.controller.onImageClick(img)}"
+							 automationName="{data.Index}" visible="@{outerDocument.controller.model['visible'+data.Index]}" buttonMode="true"/>
+					<s:Label text="{data.Title}">
+						
+					</s:Label>
+				</s:HGroup>
+				
+			</s:ItemRenderer>
+			</fx:Component>
+			</s:itemRenderer>
+		</s:List>
+		
+		<s:VGroup width="90%" height="100%">
+			<mx:DataGrid width="100%" height="50%" dragEnabled="true"
+						 headerRelease="{controller.OnHeaderRelease(event)}"
+						 dataProvider="{controller.model.dataGrid}"
+						 id="firstDataGrid">
+				<mx:columns>
+					<mx:DataGridColumn dataField="#" resizable="false" sortable="false" draggable="false"></mx:DataGridColumn>
+					<mx:DataGridColumn dataField="Title"></mx:DataGridColumn>
+					<mx:DataGridColumn dataField="Reference ID"></mx:DataGridColumn>
+					<mx:DataGridColumn dataField="Document ID"></mx:DataGridColumn>
+					<mx:DataGridColumn dataField="Link"></mx:DataGridColumn>
+				</mx:columns>
+			</mx:DataGrid>
+			
+			<mx:DataGrid width="100%" height="50%" rowCount="4" dropEnabled="true">
+				<mx:columns>
+					<mx:DataGridColumn dataField="#" resizable="false"
+									   sortable="false"></mx:DataGridColumn>
+					<mx:DataGridColumn dataField="Title"></mx:DataGridColumn>
+					<mx:DataGridColumn dataField="Reference ID"></mx:DataGridColumn>
+					<mx:DataGridColumn dataField="Document ID"></mx:DataGridColumn>
+					<mx:DataGridColumn dataField="Link"></mx:DataGridColumn>
+				</mx:columns>
+			</mx:DataGrid>
+		</s:VGroup>
+		
+	</s:HGroup>
+</s:Application>
