@@ -4,10 +4,14 @@ package by.gramovich.bsu.flex.lab3.controller
 	
 	import flash.events.MouseEvent;
 	
+	import mx.controls.Alert;
 	import mx.controls.CheckBox;
 	import mx.core.Application;
+	import mx.core.FlexGlobals;
 	import mx.events.DataGridEvent;
+	import mx.events.IndexChangedEvent;
 	import mx.events.ItemClickEvent;
+	import mx.rpc.events.HeaderEvent;
 	
 	import spark.components.CheckBox;
 
@@ -26,11 +30,8 @@ package by.gramovich.bsu.flex.lab3.controller
 		public function onRadioButtoClick(event:ItemClickEvent):void
 		{
 			var sortEvent: DataGridEvent = new DataGridEvent(DataGridEvent.HEADER_RELEASE); 
-			sortEvent.columnIndex = model.dataList.getItemIndex(event.currentTarget.selectedValue) + 1;
-			model.previousSelection = model.selectedIndex;
-			model.selectedIndex = sortEvent.columnIndex;
-			model["visible"+model.selectedIndex] = true;
-			model["visible"+model.previousSelection] = false;
+			sortEvent.columnIndex = model.dataList.getItemIndex(event.item) + 1;
+			
 			Application.application.firstDataGrid.dispatchEvent(sortEvent); 
 		}
 		
@@ -47,7 +48,7 @@ package by.gramovich.bsu.flex.lab3.controller
 		{
 			if (model.selectedIndex == img.automationName) {
 				var sortEvent: DataGridEvent = new DataGridEvent(DataGridEvent.HEADER_RELEASE);
-				sortEvent.columnIndex = (int)(img.automationName);
+				sortEvent.columnIndex = (img.automationName);
 				Application.application.firstDataGrid.columns[img.automationName].sortDescending = 
 					!Application.application.firstDataGrid.columns[img.automationName].sortDescending;
 				Application.application.firstDataGrid.dispatchEvent(sortEvent);
@@ -55,12 +56,27 @@ package by.gramovich.bsu.flex.lab3.controller
 				img.source = Application.application.firstDataGrid.columns[img.automationName].sortDescending ? "desc.png" : "asc.png";
 			}
 		}
-		
-		public function setImage(index:int, desc:Boolean) {
-			model.dataList[index]["src"] = desc ? "desc.png" : "asc.png";
-		}
 		public function OnHeaderRelease(event:DataGridEvent):void {	
+			model.previousSelection = model.selectedIndex;
+			model.selectedIndex = event.columnIndex;
+			Application.application.radioButtonGroup.getRadioButtonAt(model.selectedIndex).selected = true;
 			
+		}
+		
+		public function onHeaderShift(event:IndexChangedEvent) {
+			
+			var item:Object = model.dataList.removeItemAt(event.oldIndex - 1);
+			if (event.newIndex == model.dataList.length) {
+				model.dataList.addItem(item);
+			} else {
+				model.dataList.addItemAt(item, event.newIndex - 1);
+			}
+			
+			var sortEvent: DataGridEvent = new DataGridEvent(DataGridEvent.HEADER_RELEASE); 
+			sortEvent.columnIndex = event.newIndex;
+			
+			Application.application.firstDataGrid.dispatchEvent(sortEvent); 
+
 		}
 	}
 }
