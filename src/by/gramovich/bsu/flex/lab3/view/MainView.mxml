@@ -18,6 +18,7 @@
 			
 			[Bindable]
 			public var controller: DragAndDropController = new DragAndDropController();
+			list.get
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -41,7 +42,7 @@
 						]]>
 					</fx:Script>
 					<s:RadioButton groupName="radioButtonGroup" id="rb" selected="{data.Sorted}" value="{data}" />
-					<s:Image id="img" width="20" height="20" source="{data.src}" click="{outerDocument.controller.onImageClick(img)}"
+					<s:Image name="img{data.Index}" id="img" width="20" height="20" source="{data.src}" click="{outerDocument.controller.onImageClick(img)}"
 							 automationName="{data.Index}" visible="@{outerDocument.controller.model['visible'+data.Index]}" buttonMode="true"/>
 					<s:Label text="{data.Title}">
 						
